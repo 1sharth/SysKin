@@ -1,0 +1,35 @@
+About Previous Modelling:
+
+Packet/Particle:
+  Mass - what does this translates to in concept?
+  Why TTL? is it optional? by deafult infinite TTL makes sense right? Particle vanishes at sink only. For request response mechanicsm , source and sink are at the same side.
+
+Request Rate: OK
+
+Network Link:
+ length is not necessary since physical manisfestation of connectivity concept should not scale with physical length. FOr higher latency, let there be something like linear resistance. Higher latency means higher resistance means particles get slower moving through it. bandwidth is fine.
+
+Processing Node:
+ OK for standard default processing Node.
+
+Queue: OK
+
+Load balancer: OK. 
+
+Cache: OK
+-----
+
+Dropped request packets indication and capture in metrics. Packets wont congest in request to queue connector pipe, instead, if queue is full they would simply drop right? Lets think about what actually happens in network call - there may be internal queue or buffer but when interacting with queue system, queue system may immediately respond saying queue is full , so dropping packet is design decision instead of forming network congestion - let this by default behaviour of network connector pipes - if you aggree that is.
+
+Extending optional complexity with processing worker - Cores, Memory etc.
+Extending optional complexity with request packet - it invoking various kind of application services in worker - x% of IO non blocking operations that can concurrently run in single event loop thread, y% of blocking or CPU intensive operations that need a thread for each one if concurrency needs to be achieved with them etc. x+y=100. Feel free to suggest modelling here. 
+
+Different algorithm choice for each component wherever applicable:
+	Properties: Like for loadbalancer, we have various algorithms for load balancing; cache eviction policy for cache etc. Similarly find for others that makes sense to model.
+	Thinks going wrong: Settings for downtime and spawn recover time - Worker Node goes down probability and respawn time etc
+
+Currnt diagram - queues look coupled to workers, i hope component is decoupled.
+----------------
+
+
+

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Dynamics Simulator • Rectangle & Pipe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Top Navigation & Speed Header -->
+      <header class="header">
+        <div class="header-brand">
+          <div class="brand-badge">SYS-SIM</div>
+          <div class="brand-title">
+            <span class="title-main">Discrete Kinematics</span>
+            <span class="title-sub">The Rectangle &amp; Pipe Prototype</span>
+          </div>
+        </div>
+
+        <!-- Prominent Simulation Speed Banner -->
+        <div class="speed-banner-container">
+          <div class="speed-badge" id="speed-indicator-badge">
+            <span class="pulse-dot"></span>
+            <span class="badge-label">SIMULATION SPEED</span>
+            <span class="badge-value" id="speed-value-text">Scaled to 1.0x</span>
+          </div>
+          <div class="speed-controls">
+            <button class="btn btn-icon" id="btn-pause" title="Play / Pause">
+              <span id="play-icon">⏸</span>
+            </button>
+            <button class="btn btn-icon" id="btn-step" title="Step +16ms (when paused)">
+              <span>⏯</span>
+            </button>
+            <div class="speed-preset-group">
+              <button class="btn btn-pill" data-speed="0.2">0.2x</button>
+              <button class="btn btn-pill active" data-speed="1.0">1x</button>
+              <button class="btn btn-pill" data-speed="2.0">2x</button>
+              <button class="btn btn-pill" data-speed="5.0">5x</button>
+              <button class="btn btn-pill" data-speed="10.0">10x</button>
+            </div>
+            <div class="speed-slider-wrap">
+              <input type="range" id="speed-slider" min="0.1" max="15.0" step="0.1" value="1.0" />
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-outline" id="btn-reset-stats">Reset Metrics</button>
+        </div>
+      </header>
+
+      <!-- Main Canvas Viewport -->
+      <main id="canvas-container"></main>
+
+      <!-- Bottom Floating Controls & Telemetry Dashboard -->
+      <footer class="footer-dashboard">
+        <!-- Telemetry Cards -->
+        <div class="telemetry-grid">
+          <div class="metric-card">
+            <span class="metric-label">Inflow Rate</span>
+            <span class="metric-value text-blue" id="stat-inflow">0.0 <small>req/s</small></span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Queue Depth</span>
+            <span class="metric-value text-amber" id="stat-queue">0 / 8</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Workers Active</span>
+            <span class="metric-value text-cyan" id="stat-workers">0 / 2</span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Outflow Throughput</span>
+            <span class="metric-value text-green" id="stat-outflow">0.0 <small>req/s</small></span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Avg Total Latency</span>
+            <span class="metric-value text-light" id="stat-latency">0 <small>ms</small></span>
+          </div>
+          <div class="metric-card">
+            <span class="metric-label">Dropped (Overflow)</span>
+            <span class="metric-value text-red" id="stat-dropped">0</span>
+          </div>
+        </div>
+
+        <!-- Interactive Sliders / System Knobs -->
+        <div class="controls-grid">
+          <!-- Emitter Config -->
+          <div class="control-box">
+            <div class="control-box-header">
+              <span class="dot-indicator blue"></span>
+              <span class="box-title">Client Emitter</span>
+              <span class="box-value" id="val-emitter-rate">4.0 req/s</span>
+            </div>
+            <input type="range" id="input-emitter-rate" min="0.5" max="25" step="0.5" value="4.0" />
+            <div class="slider-hint">Burst trigger: <button class="btn-micro" id="btn-burst">+5 Burst</button></div>
+          </div>
+
+          <!-- Component Config -->
+          <div class="control-box">
+            <div class="control-box-header">
+              <span class="dot-indicator cyan"></span>
+              <span class="box-title">Component Workers</span>
+              <span class="box-value" id="val-worker-count">2 workers</span>
+            </div>
+            <input type="range" id="input-worker-count" min="1" max="6" step="1" value="2" />
+            <div class="slider-hint">Concurrency capacity ($N$)</div>
+          </div>
+
+          <div class="control-box">
+            <div class="control-box-header">
+              <span class="dot-indicator amber"></span>
+              <span class="box-title">Processing Duration</span>
+              <span class="box-value" id="val-process-time">450 ms</span>
+            </div>
+            <input type="range" id="input-process-time" min="50" max="2000" step="25" value="450" />
+            <div class="slider-hint">Service time per request ($T_s$)</div>
+          </div>
+
+          <div class="control-box">
+            <div class="control-box-header">
+              <span class="dot-indicator purple"></span>
+              <span class="box-title">Queue Buffer Capacity</span>
+              <span class="box-value" id="val-queue-cap">8 slots</span>
+            </div>
+            <input type="range" id="input-queue-cap" min="2" max="16" step="1" value="8" />
+            <div class="slider-hint">Hopper volume before backpressure spill</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
